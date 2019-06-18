@@ -29,26 +29,26 @@
           <th class="col-xl-4 col-lg-4" style="width: 10%">
             <div class="media align-items-center">
               <div class="media-body">
-                <span class="name mb-0 text-sm">{{row.RES_NAME}}</span>
+                <span class="name mb-0 text-sm">{{row.RESTAURANT.RES_NAME}}</span>
               </div>
             </div>
 
-            <small class="d-inline-block mb-0 text-sm text-muted">{{row.RES_MENU}}</small>
+            <small class="d-inline-block mb-0 text-sm text-muted">{{row.RESTAURANT.RES_MENU}}</small>
           </th>
           <td class="budget">
-            {{row.RES_PRICE}}
+            {{row.RESTAURANT.RES_PRICE}}
           </td>
           <td class="budget">
-            {{row.RES_OPENING_TIME}}-{{row.RES_CLOSING_TIME}}
+            {{row.RESTAURANT.RES_OPENING_TIME}}-{{row.RESTAURANT.RES_CLOSING_TIME}}
           </td>
           <td>
             <div class="d-flex align-items-center">
-              <span class="completion mr-2">{{row.PERCENTAGE}}%</span>
+              <!-- <span class="completion mr-2">{{(row.VOTING.VOTES/row.VOTING.TOTAL*100).toFixed(2)}}%</span> -->
               <div>
                 <base-progress type="success"
                                :show-percentage="true"
                                class="pt-0"
-                               :value="row.PERCENTAGE"/>
+                               :value="(row.VOTING.VOTES/row.VOTING.TOTAL*100)"/>
               </div>
             </div>
           </td>
@@ -78,9 +78,9 @@
     },
     mounted () {
       axios
-        .get('./tableDataMagnumExample.json')
+        .get('https://localhost:44384/api/survey/day/partial')
         .then((response) => {
-          this.tableData = response.data;
+          this.tableData = response.data.Object;
         });
     }
   }
