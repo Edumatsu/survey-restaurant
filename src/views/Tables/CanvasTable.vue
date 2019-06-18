@@ -60,6 +60,9 @@
   </div>
 </template>
 <script>
+
+  import axios from 'axios'
+
   export default {
     name: 'projects-table',
     props: {
@@ -70,41 +73,15 @@
     },
     data() {
       return {
-        tableData: [
-          {
-            RES_NAME: 'Club Sub Paulista',
-            RES_MENU: 'Feijoada, Couve refogada, arroz, farofa, banana frita',
-            PERCENTAGE: 60,
-            RES_PRICE: 'R$ 14,90',
-            RES_OPENING_TIME: '11:30',
-            RES_CLOSING_TIME: '15:30'
-          },
-          {
-            RES_NAME: 'Pimenta Rosa',
-            RES_MENU: 'Frango, Frango, Frango, farofa, Frango',
-            PERCENTAGE: 15,
-            RES_PRICE: 'R$ 12,90',
-            RES_OPENING_TIME: '11:30',
-            RES_CLOSING_TIME: '15:30'
-          },
-          {
-            RES_NAME: 'Madero',
-            RES_MENU: 'Feijoada Gourmet, Couve refogada Gourmet, banana frita Gourmet',
-            PERCENTAGE: 10,
-            RES_PRICE: 'R$ 59,90',
-            RES_OPENING_TIME: '11:30',
-            RES_CLOSING_TIME: '15:30'
-          },
-          {
-            RES_NAME: 'Le Gusta',
-            RES_MENU: 'Muita Feijoada, Couve refogada, Muito arroz',
-            PERCENTAGE: 15,
-            RES_PRICE: 'R$ 17,90',
-            RES_OPENING_TIME: '11:30',
-            RES_CLOSING_TIME: '15:30'
-          }
-        ]
+        tableData: null
       }
+    },
+    mounted () {
+      axios
+        .get('./tableDataMagnumExample.json')
+        .then((response) => {
+          this.tableData = response.data;
+        });
     }
   }
 </script>
