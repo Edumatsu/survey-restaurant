@@ -9,6 +9,7 @@
                         <form role="form">
                             <base-input class="input-group-alternative mb-3"
                                         placeholder="RA"
+                                        type="number"
                                         addon-left-icon="ni ni-circle-08"
                                         v-model="model.STD_RA">
                             </base-input>
@@ -33,6 +34,7 @@
         </div>
 </template>
 <script>
+  import axios from 'axios'
   import router from '../router'
   export default {
     name: 'login',
@@ -46,7 +48,26 @@
     },
     methods: {
         login() {
-            router.push("today-result")
+            if (this.model.STD_RA == '' || this.model.STD_PASSWORD == '') {
+                console.log("RA e senha são campos obrigatórios");
+                return;
+            }
+
+            axios
+            .post('https://localhost:44384/api/login', this.model)
+            .then((response) => {
+                if (! response.data && ! response.data.Object) {
+                    console.log("Erro ao fazer login");
+                    return;
+                }
+
+                if (response.data.Object.STD_IDENTI) {
+                    router.push("today-result");
+                    return;
+                }
+
+                console.log(response.data.Object);
+            });
         }
     }
   }

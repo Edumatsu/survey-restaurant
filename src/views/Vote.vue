@@ -27,7 +27,7 @@
   export default {
     data() {
         return {
-            voteEnabled: false
+            voteEnabled: true
         }
     },
     name: 'tables',

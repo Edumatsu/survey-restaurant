@@ -57,6 +57,8 @@
   </div>
 </template>
 <script>
+  import axios from 'axios'
+
   export default {
     name: 'projects-table',
     props: {
@@ -66,42 +68,23 @@
       title: String
     },
     data() {
-      return {
-        votedSuccess: false,
-        tableData: [
-          {
+      axios
+        .get('https://localhost:44384/api/restaurant')
+        .then((response) => {
+          this.tableData = response.data.Object;
+          /*{
             RES_NAME: 'Club Sub Paulista',
             RES_MENU: 'Feijoada, Couve refogada, arroz, farofa, banana frita',
             RES_PRICE: 'R$ 14,90',
             RES_OPENING_TIME: '11:30',
             RES_CLOSING_TIME: '15:30',
             YOUR_VOTE: false
-          },
-          {
-            RES_NAME: 'Pimenta Rosa',
-            RES_MENU: 'Frango, Frango, Frango, farofa, Frango',
-            RES_PRICE: 'R$ 12,90',
-            RES_OPENING_TIME: '11:30',
-            RES_CLOSING_TIME: '15:30',
-            YOUR_VOTE: true
-          },
-          {
-            RES_NAME: 'Madero',
-            RES_MENU: 'Feijoada Gourmet, Couve refogada Gourmet, banana frita Gourmet',
-            RES_PRICE: 'R$ 59,90',
-            RES_OPENING_TIME: '11:30',
-            RES_CLOSING_TIME: '15:30',
-            YOUR_VOTE: false
-          },
-          {
-            RES_NAME: 'Le Gusta',
-            RES_MENU: 'Muita Feijoada, Couve refogada, Muito arroz',
-            RES_PRICE: 'R$ 17,90',
-            RES_OPENING_TIME: '11:30',
-            RES_CLOSING_TIME: '15:30',
-            YOUR_VOTE: false
-          }
-        ]
+          }*/
+        });
+
+      return {
+        votedSuccess: false,
+        tableData: this.tableData
       }
     },
     methods: {
