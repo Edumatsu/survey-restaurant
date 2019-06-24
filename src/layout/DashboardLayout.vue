@@ -44,6 +44,7 @@
   </div>
 </template>
 <script>
+  import router from '../router';
   import DashboardNavbar from './DashboardNavbar.vue';
   import ContentFooter from './ContentFooter.vue';
   import { FadeTransition } from 'vue2-transitions';
@@ -64,6 +65,11 @@
         if (this.$sidebar.showSidebar) {
           this.$sidebar.displaySidebar(false);
         }
+      }
+    },
+    mounted() {
+      if (!this.$store.state.user) {
+        router.push("/");
       }
     }
   };

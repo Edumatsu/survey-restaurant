@@ -34,8 +34,10 @@
         </div>
 </template>
 <script>
+  import Vue from 'vue'
   import axios from 'axios'
   import router from '../router'
+
   export default {
     name: 'login',
     data() {
@@ -49,24 +51,36 @@
     methods: {
         login() {
             if (this.model.STD_RA == '' || this.model.STD_PASSWORD == '') {
-                console.log("RA e senha são campos obrigatórios");
+                this.$notify({
+                    group: 'foo',
+                    type: 'warning',
+                    title: 'RA e senha são campos obrigatórios!'
+                });
+
                 return;
             }
 
             axios
-            .post('https://localhost:44384/api/login', this.model)
+            .post( Vue.config.apiURL + 'login', this.model)
             .then((response) => {
-                if (! response.data && ! response.data.Object) {
-                    console.log("Erro ao fazer login");
+                if (! response.data || typeof response.data.Object == "string") {
+                    this.$notify({
+                        group: 'foo',
+                        type: 'warning',
+                        title: 'RA e/ou senha errados!'
+                    });
                     return;
                 }
 
+                console.log('response.data.Object', response.data.Object);
+
                 if (response.data.Object.STD_IDENTI) {
+                    console.log('Vue', Vue)
+                    
+                    this.$store.commit('login', response.data.Object);
                     router.push("today-result");
                     return;
                 }
-
-                console.log(response.data.Object);
             });
         }
     }

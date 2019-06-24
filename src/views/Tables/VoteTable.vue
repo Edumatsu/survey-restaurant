@@ -43,9 +43,9 @@
           </td>
           <td>
             <div class="d-flex align-items-center">
-              <base-button type="default" :disabled="row.YOUR_VOTE == true" class="col-12 my-4" @click="vote()">
-                <span v-if="!row.YOUR_VOTE">Votar neste</span>
-                <span v-if="row.YOUR_VOTE">Votado</span>
+              <base-button type="default" :disabled="userRestaurantVoted == row.RES_IDENTI" class="col-12 my-4" @click="vote(row.RES_IDENTI)">
+                <span v-if="userRestaurantVoted != row.RES_IDENTI">Votar neste</span>
+                <span v-if="userRestaurantVoted == row.RES_IDENTI">Votado</span>
               </base-button>
             </div>
           </td>
@@ -58,6 +58,7 @@
 </template>
 <script>
   import axios from 'axios'
+  import Vue from 'vue'
 
   export default {
     name: 'projects-table',
@@ -68,32 +69,82 @@
       title: String
     },
     data() {
-      axios
-        .get('https://localhost:44384/api/restaurant')
-        .then((response) => {
-          this.tableData = response.data.Object;
-          /*{
-            RES_NAME: 'Club Sub Paulista',
-            RES_MENU: 'Feijoada, Couve refogada, arroz, farofa, banana frita',
-            RES_PRICE: 'R$ 14,90',
-            RES_OPENING_TIME: '11:30',
-            RES_CLOSING_TIME: '15:30',
-            YOUR_VOTE: false
-          }*/
-        });
-
       return {
         votedSuccess: false,
-        tableData: this.tableData
+        tableData: this.tableData,
+        userRestaurantVoted: null
       }
     },
-    methods: {
-      vote() {
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'Seu voto foi computado com sucesso!'
+    mounted () {
+      axios
+        .get( Vue.config.apiURL + 'restaurant')
+        .then((response) => {
+          this.tableData = response.data.Object;
+
+          // pega o voto do estudante
+          axios
+            .get( Vue.config.apiURL + 'survey/' + this.$store.state.user.STD_IDENTI)
+            .then((response) => {
+              if (response.data && response.data.Object) {
+                this.userRestaurantVoted = response.data.Object.SRV_RESTAURANT_ID;
+              }
+          });
+
         });
+    },
+    methods: {
+      vote(RES_IDENTI) {
+        if (this.userRestaurantVoted) {
+          axios
+            .put( Vue.config.apiURL + 'survey', {
+              SRV_STUDENT_ID: this.$store.state.user.STD_IDENTI,
+              SRV_RESTAURANT_ID: RES_IDENTI
+            })
+            .then((response) => {
+              if (! response.data || ! response.data.Object) {
+                this.$notify({
+                  group: 'foo',
+                  type: 'warning',
+                  title: 'Ocorreu um erro ao computar seu voto!'
+                });
+
+                return;
+              }
+
+              this.userRestaurantVoted = RES_IDENTI;
+              
+              this.$notify({
+                group: 'foo',
+                type: 'success',
+                title: 'Seu voto foi computado com sucesso!'
+              });
+          });
+        } else {
+          axios
+            .post( Vue.config.apiURL + 'survey', {
+              SRV_STUDENT_ID: this.$store.state.user.STD_IDENTI,
+              SRV_RESTAURANT_ID: RES_IDENTI
+            })
+            .then((response) => {
+              if (! response.data || ! response.data.Object) {
+                this.$notify({
+                  group: 'foo',
+                  type: 'warning',
+                  title: 'Ocorreu um erro ao computar seu voto!'
+                });
+
+                return;
+              }
+
+              this.userRestaurantVoted = RES_IDENTI;
+              
+              this.$notify({
+                group: 'foo',
+                type: 'success',
+                title: 'Seu voto foi computado com sucesso!'
+              });
+          });
+        }
       }
     }
   }

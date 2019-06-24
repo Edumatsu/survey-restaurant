@@ -11,15 +11,15 @@
                 <base-dropdown class="nav-link pr-0">
                     <div class="media align-items-center" slot="title">
                         <div class="media-body ml-2 d-none d-lg-block">
-                            <span class="mb-0 text-sm  font-weight-bold">Olá, Jessica Jones.</span>
+                            <span class="mb-0 text-sm  font-weight-bold">Olá, {{user.STD_NAME}}.</span>
                         </div>
                     </div>
 
                     <template>
-                        <router-link to="/login" class="dropdown-item">
+                        <a href="javascript:void(0);" @click="logout()" class="dropdown-item">
                             <i class="ni ni-user-run"></i>
                             <span>Sair</span>
-                        </router-link>
+                        </a>
                     </template>
                 </base-dropdown>
             </li>
@@ -27,15 +27,21 @@
     </base-nav>
 </template>
 <script>
+  import router from '../router';
   export default {
     data() {
       return {
         activeNotifications: false,
         showMenu: false,
-        searchQuery: ''
+        searchQuery: '',
+        user: this.$store.state.user || {}
       };
     },
     methods: {
+      logout() {
+        this.$store.commit("logout");
+        router.push("/");
+      },
       toggleSidebar() {
         this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
       },

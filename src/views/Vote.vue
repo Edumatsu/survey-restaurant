@@ -24,15 +24,20 @@
 </template>
 <script>
   import VoteTable from './Tables/VoteTable'
+  import Vue from 'vue';
+
   export default {
     data() {
         return {
-            voteEnabled: true
+            voteEnabled: false
         }
     },
     name: 'tables',
     components: {
       VoteTable
+    },
+    mounted() {
+      this.voteEnabled = (new Date().getHours() >= Vue.config.initialHour && new Date().getHours() < Vue.config.endHour);
     }
   };
 </script>

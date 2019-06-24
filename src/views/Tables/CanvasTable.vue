@@ -43,12 +43,11 @@
           </td>
           <td>
             <div class="d-flex align-items-center">
-              <!-- <span class="completion mr-2">{{(row.VOTING.VOTES/row.VOTING.TOTAL*100).toFixed(2)}}%</span> -->
               <div>
                 <base-progress type="success"
                                :show-percentage="true"
                                class="pt-0"
-                               :value="(row.VOTING.VOTES/row.VOTING.TOTAL*100)"/>
+                               :value="(row.VOTING.VOTES/row.VOTING.TOTAL*100) | percentage"/>
               </div>
             </div>
           </td>
@@ -61,6 +60,7 @@
 </template>
 <script>
 
+  import Vue from 'vue'
   import axios from 'axios'
 
   export default {
@@ -78,10 +78,16 @@
     },
     mounted () {
       axios
-        .get('https://localhost:44384/api/survey/day/partial')
+        .get( Vue.config.apiURL + 'survey/day/partial')
         .then((response) => {
           this.tableData = response.data.Object;
         });
+    },
+    filters: {
+      percentage(value) {
+        value = value || 0;
+        return (Math.round(value * 100) / 100);
+      }
     }
   }
 </script>

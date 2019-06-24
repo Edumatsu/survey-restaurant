@@ -55,6 +55,10 @@
   </div>
 </template>
 <script>
+
+  import Vue from 'vue'
+  import axios from 'axios'
+  
   export default {
     name: 'projects-table',
     props: {
@@ -65,24 +69,24 @@
     },
     data() {
       return {
-        tableData: [
-          {
-            SVY_DAY: "Segunda-feira",
-            RES_NAME: 'Club Sub Paulista',
-            PERCENTAGE: 60
-          },
-          {
-            SVY_DAY: "Terça-feira",
-            RES_NAME: 'Madero',
-            PERCENTAGE: 48
-          },
-          {
-            SVY_DAY: "Quarta-feira",
-            RES_NAME: 'Pimenta rosa',
-            PERCENTAGE: 45
-          }
-        ]
+        tableData: null
       }
+    },
+    mounted () {
+      axios
+        .get( Vue.config.apiURL + 'survey/week/result')
+        .then((response) => {
+          if (response.data.Object && response.data.Object.length > 0) {
+            this.tableData = response.data.Object;
+            return;
+          }
+
+          this.tableData = [{
+            SVY_DAY: "-",
+            RES_NAME: 'Nenhum resultado para esta semana',
+            PERCENTAGE: 0
+          }];
+        });
     }
   }
 </script>

@@ -26,10 +26,29 @@
 </template>
 <script>
   import CanvasTable from './Tables/CanvasTable'
+  import axios from 'axios'
+  import Vue from 'vue'
+
   export default {
     name: 'tables',
     components: {
       CanvasTable
+    },
+    mounted() {
+      this.showWinner = true;//(new Date().getHours() >= Vue.config.initialHour && new Date().getHours() < Vue.config.endHour);
+
+      axios
+        .get( Vue.config.apiURL + 'survey/day/result')
+        .then((response) => {
+          
+          if (!response.data.Object) {
+            axios
+              .post( Vue.config.apiURL + 'survey/finish')
+              .then((response) => {
+                console.log('response finish', response)
+            });
+          }
+      });
     }
   };
 </script>
