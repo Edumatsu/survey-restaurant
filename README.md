@@ -1,9 +1,8 @@
 # RestSurvey 
 ## Enquete para os estudantes votarem nos restaurantes que querem almoçar
 
-
-**Para subir a API**
-...
+**Requisitos**
+- Node 10.16.0 instalado
 
 **Para subir o client (front)**
 - Acessar a pasta raiz.
